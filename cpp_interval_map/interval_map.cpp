@@ -18,7 +18,7 @@ public:
       _map.emplace(std::numeric_limits<K>::min(), _valBegin);
     }
     if (!(keyBegin < keyEnd) || keyBegin <= std::numeric_limits<K>::min() ||
-        keyEnd >= std::numeric_limits<K>::max()) {
+        keyEnd > std::numeric_limits<K>::max()) {
       return;
     }
 
