@@ -32,13 +32,12 @@ where
         {
             return;
         }
-        let what_ends: V = self
+        let what_ends: V = *self
             .mymap
             .range((Unbounded, Included(_key_end)))
             .last()
             .unwrap()
-            .1
-            .clone();
+            .1;
         self.delete_range(_key_begin, _key_end);
         self.mymap.insert(_key_begin, _value);
         self.mymap.insert(_key_end, what_ends);
