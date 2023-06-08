@@ -1,7 +1,7 @@
 #![recursion_limit = "1024"]
 use std::collections::BTreeMap;
 trait Interval<'a, K, V> {
-    fn init(&mut self, _key_begin: K);
+    fn init(&mut self, _key_begin: K, _key_end: K);
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V);
     fn delete_keys(&mut self, _keys: &Vec<K>);
     fn delete_range(&mut self, _key_begin: K, _key_end: K);
@@ -19,18 +19,21 @@ where
     K: Copy + std::cmp::Eq + std::hash::Hash + std::cmp::Ord + std::fmt::Debug + 'a,
     V: Copy + std::cmp::PartialEq + std::default::Default + std::fmt::Debug + 'a,
 {
-    fn init(&mut self, _key_begin: K) {
+    fn init(&mut self, _key_begin: K, _key_end: K) {
         self.mymap.insert(_key_begin, self.val_begin);
+        self.mymap.insert(_key_end, self.val_begin);
     }
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V) {
+        if !(_key_begin < _key_end
+            || self.mymap.first_key_value().unwrap().0 >= &_key_begin
+            || self.mymap.last_key_value().unwrap().0 < &_key_end
+            || _value == self.val_begin)
+        {
+            return;
+        }
         self.delete_range(_key_begin, _key_end);
         self.mymap.insert(_key_begin, _value);
         self.mymap.insert(_key_end, self.val_begin);
-    }
-    fn delete_keys(&mut self, _keys: &Vec<K>) {
-        for _key in _keys {
-            let _ = &self.mymap.remove(&_key);
-        }
     }
     fn delete_range(&mut self, _key_begin: K, _key_end: K) {
         self.mymap
@@ -49,6 +52,11 @@ where
         }
         self.delete_keys(&keys);
     }
+    fn delete_keys(&mut self, _keys: &Vec<K>) {
+        for _key in _keys {
+            let _ = &self.mymap.remove(&_key);
+        }
+    }
 }
 
 fn main() {
@@ -56,7 +64,7 @@ fn main() {
         val_begin: '_',
         mymap: &mut BTreeMap::<i32, char>::new(),
     };
-    my_map.init(i32::MIN);
+    my_map.init(i32::MIN, i32::MAX);
     my_map.assign(1, 2, 'A');
     my_map.assign(2, 5, 'A');
     my_map.assign(10, 50, 'A');

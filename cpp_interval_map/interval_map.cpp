@@ -18,7 +18,7 @@ public:
       _map.emplace(std::numeric_limits<K>::min(), _valBegin);
     }
     if (!(keyBegin < keyEnd) || keyBegin <= std::numeric_limits<K>::min() ||
-        keyEnd > std::numeric_limits<K>::max()) {
+        keyEnd > std::numeric_limits<K>::max() || val == _valBegin) {
       return;
     }
 
@@ -50,14 +50,7 @@ public:
 
 int main() {
   MyMap<int, char> m('_');
-  m.assign(-5, 0, 'A');
-  m.assign(0, 5, 'B');
-  m.assign(5, 10, 'A');
-  m.print();
-}
-
-/*
- m.assign(3, 8, 'A');
+  m.assign(3, 8, 'A');
   m.print();
   m.assign(10, 18, 'C');
   m.print();
@@ -93,4 +86,4 @@ int main() {
   m.print();
   m.make_canonical();
   m.print();
-*/
+}
