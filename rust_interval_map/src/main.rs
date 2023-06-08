@@ -34,7 +34,7 @@ where
         }
         let what_ends: V = self
             .mymap
-            .range((Unbounded, Included(_key_begin)))
+            .range((Unbounded, Included(_key_end)))
             .last()
             .unwrap()
             .1
