@@ -51,11 +51,11 @@ where
         let mut current: V = Default::default();
         let mut previous: V;
         let mut keys: Vec<K> = vec![];
-        let last_key = self.mymap.last_key_value().unwrap().0;
+        let last_key = *self.mymap.last_key_value().unwrap().0;
         for (_key, _value) in &*self.mymap {
             previous = current;
             current = *_value;
-            if current == previous && _key != last_key {
+            if current == previous && *_key != last_key {
                 keys.push(*_key);
             }
         }
