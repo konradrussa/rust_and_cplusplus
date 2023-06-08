@@ -26,8 +26,8 @@ where
     }
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V) {
         if !(_key_begin < _key_end)
-            || self.mymap.first_key_value().unwrap().0 >= &_key_begin
-            || self.mymap.last_key_value().unwrap().0 < &_key_end
+            || &_key_begin <= self.mymap.first_key_value().unwrap().0
+            || &_key_end > self.mymap.last_key_value().unwrap().0
             || _value == self.val_begin
         {
             return;
