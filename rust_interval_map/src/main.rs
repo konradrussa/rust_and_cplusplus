@@ -26,8 +26,8 @@ where
     }
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V) {
         if !(_key_begin < _key_end)
-            || &_key_begin <= self.mymap.first_key_value().unwrap().0
-            || &_key_end > self.mymap.last_key_value().unwrap().0
+            || _key_begin <= *self.mymap.first_key_value().unwrap().0
+            || _key_end > *self.mymap.last_key_value().unwrap().0
             || _value == self.val_begin
         {
             return;
@@ -74,7 +74,7 @@ fn main() {
         mymap: &mut BTreeMap::<i32, char>::new(),
     };
     my_map.init(i32::MIN, i32::MAX);
-    my_map.assign(1, 2, 'A');
+    my_map.assign(0, 2, 'A');
     my_map.assign(2, 5, 'A');
     my_map.assign(10, 50, 'A');
     my_map.assign(20, 30, 'B');
