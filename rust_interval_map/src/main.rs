@@ -3,7 +3,8 @@ use std::collections::BTreeMap;
 trait Interval<'a, K, V> {
     fn init(&mut self, _key_begin: K);
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V);
-    fn delete_keys(&mut self, _keys: Vec<K>);
+    fn delete_keys(&mut self, _keys: &Vec<K>);
+    fn delete_range(&mut self, _key_begin: K, _key_end: K);
     fn make_canonical(&mut self);
 }
 
@@ -15,26 +16,30 @@ struct Map<'a, K, V> {
 
 impl<'a, K, V> Interval<'a, K, V> for Map<'a, K, V>
 where
-    K: Copy + std::cmp::Eq + std::hash::Hash + std::cmp::Ord + 'a,
-    V: Copy + std::cmp::PartialEq + std::default::Default + 'a,
+    K: Copy + std::cmp::Eq + std::hash::Hash + std::cmp::Ord + std::fmt::Debug + 'a,
+    V: Copy + std::cmp::PartialEq + std::default::Default + std::fmt::Debug + 'a,
 {
     fn init(&mut self, _key_begin: K) {
         self.mymap.insert(_key_begin, self.val_begin);
     }
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V) {
+        self.delete_range(_key_begin, _key_end);
         self.mymap.insert(_key_begin, _value);
         self.mymap.insert(_key_end, self.val_begin);
     }
-    fn delete_keys(&mut self, _keys: Vec<K>) {
+    fn delete_keys(&mut self, _keys: &Vec<K>) {
         for _key in _keys {
             let _ = &self.mymap.remove(&_key);
         }
     }
-
+    fn delete_range(&mut self, _key_begin: K, _key_end: K) {
+        self.mymap
+            .retain(|&key, _| key >= _key_begin || key < _key_end);
+    }
     fn make_canonical(&mut self) {
         let mut current: V = Default::default();
         let mut previous: V;
-        let mut keys = vec![];
+        let mut keys: Vec<K> = vec![];
         for (_key, _value) in &*self.mymap {
             previous = current;
             current = *_value;
@@ -42,7 +47,7 @@ where
                 keys.push(*_key);
             }
         }
-        self.delete_keys(keys);
+        self.delete_keys(&keys);
     }
 }
 
