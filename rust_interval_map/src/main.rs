@@ -32,10 +32,13 @@ where
         {
             return;
         }
-        let mut what_ends: V = Default::default();
-        for(_, value) in self.mymap.range((Unbounded, Included(_key_begin))) {
-            what_ends = *value;
-        }
+        let what_ends: V = self
+            .mymap
+            .range((Unbounded, Included(_key_begin)))
+            .last()
+            .unwrap()
+            .1
+            .clone();
         self.delete_range(_key_begin, _key_end);
         self.mymap.insert(_key_begin, _value);
         self.mymap.insert(_key_end, what_ends);
