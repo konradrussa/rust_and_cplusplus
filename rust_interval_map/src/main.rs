@@ -33,7 +33,7 @@ where
             return;
         }
         let mut what_ends: V = Default::default();
-        for(key, value) in self.mymap.range((Unbounded, Included(_key_begin))) {
+        for(_, value) in self.mymap.range((Unbounded, Included(_key_begin))) {
             what_ends = *value;
         }
         self.delete_range(_key_begin, _key_end);
