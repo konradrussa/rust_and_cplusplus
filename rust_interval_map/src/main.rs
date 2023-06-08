@@ -1,5 +1,6 @@
 #![recursion_limit = "1024"]
 use std::collections::BTreeMap;
+use std::ops::Bound::{Included, Unbounded};
 trait Interval<'a, K, V> {
     fn init(&mut self, _key_begin: K, _key_end: K);
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V);
@@ -31,9 +32,13 @@ where
         {
             return;
         }
+        let mut what_ends: V = Default::default();
+        for(key, value) in self.mymap.range((Unbounded, Included(_key_begin))) {
+            what_ends = *value;
+        }
         self.delete_range(_key_begin, _key_end);
         self.mymap.insert(_key_begin, _value);
-        self.mymap.insert(_key_end, self.val_begin);
+        self.mymap.insert(_key_end, what_ends);
     }
     fn delete_range(&mut self, _key_begin: K, _key_end: K) {
         self.mymap
@@ -69,6 +74,7 @@ fn main() {
     my_map.assign(1, 2, 'A');
     my_map.assign(2, 5, 'A');
     my_map.assign(10, 50, 'A');
+    my_map.assign(20, 30, 'B');
     my_map.make_canonical();
     println!("Hello, world! {:?}", my_map);
 }
