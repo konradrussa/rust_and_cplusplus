@@ -1,2 +1,2 @@
 # rust_and_cplusplus
-Rust and C++ samples
+Rust and C++17 samples
