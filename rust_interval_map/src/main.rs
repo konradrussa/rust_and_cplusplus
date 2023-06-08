@@ -44,7 +44,7 @@ where
     }
     fn delete_range(&mut self, _key_begin: K, _key_end: K) {
         self.mymap
-            .retain(|&key, _| key >= _key_begin || key < _key_end);
+            .retain(|&key, _| key <= _key_begin || key > _key_end);
     }
     fn make_canonical(&mut self) {
         let mut current: V = Default::default();
@@ -77,6 +77,7 @@ fn main() {
     my_map.assign(2, 5, 'A');
     my_map.assign(10, 50, 'A');
     my_map.assign(20, 30, 'B');
+    my_map.assign(-20, 80, 'V');
     my_map.make_canonical();
     println!("Hello, world! {:?}", my_map);
 }
