@@ -24,10 +24,10 @@ where
         self.mymap.insert(_key_end, self.val_begin);
     }
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V) {
-        if !(_key_begin < _key_end
+        if !(_key_begin < _key_end)
             || self.mymap.first_key_value().unwrap().0 >= &_key_begin
             || self.mymap.last_key_value().unwrap().0 < &_key_end
-            || _value == self.val_begin)
+            || _value == self.val_begin
         {
             return;
         }
