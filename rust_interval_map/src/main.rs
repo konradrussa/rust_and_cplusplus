@@ -66,11 +66,8 @@ where
             let _ = &self.mymap.remove(&_key);
         }
     }
-    fn get_closest(&self, _key: K) ->  Option<(&K, &V)> {
-        self
-            .mymap
-            .range((Unbounded, Included(_key)))
-            .last()
+    fn get_closest(&self, _key: K) -> Option<(&K, &V)> {
+        self.mymap.range((Unbounded, Included(_key))).last()
     }
 }
 
@@ -99,7 +96,7 @@ fn main() {
 Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: '_', 2147483647: '_'} }
 Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 2147483647: '_'} }
 Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 10: 'A', 50: '_', 2147483647: '_'} }
-Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 10: 'A', 20: 'B', 30: 'A', 50: '_', 2147483647: '_'} }  
+Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 10: 'A', 20: 'B', 30: 'A', 50: '_', 2147483647: '_'} }
 Closest for 10: Some((10, 'A'))
 Closest for 25: Some((20, 'B'))
 Canonical Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 5: '_', 10: 'A', 20: 'B', 30: 'A', 50: '_', 2147483647: '_'} }
