@@ -7,6 +7,7 @@ trait Interval<'a, K, V> {
     fn delete_keys(&mut self, _keys: &Vec<K>);
     fn delete_range(&mut self, _key_begin: K, _key_end: K);
     fn make_canonical(&mut self);
+    fn get_closest(&self, _key: K) -> Option<(&K, &V)>;
 }
 
 #[derive(Debug)]
@@ -65,6 +66,12 @@ where
             let _ = &self.mymap.remove(&_key);
         }
     }
+    fn get_closest(&self, _key: K) ->  Option<(&K, &V)> {
+        self
+            .mymap
+            .range((Unbounded, Included(_key)))
+            .last()
+    }
 }
 
 fn main() {
@@ -74,10 +81,27 @@ fn main() {
     };
     my_map.init(i32::MIN, i32::MAX);
     my_map.assign(0, 2, 'A');
+    println!("{:?}", my_map);
     my_map.assign(2, 5, 'A');
+    println!("{:?}", my_map);
     my_map.assign(10, 50, 'A');
+    println!("{:?}", my_map);
     my_map.assign(20, 30, 'B');
-    my_map.assign(-20, 80, 'V');
+    println!("{:?}", my_map);
+    println!("Closest for 10: {:?}", my_map.get_closest(10));
+    println!("Closest for 25: {:?}", my_map.get_closest(25));
     my_map.make_canonical();
-    println!("Hello, world! {:?}", my_map);
+    println!("Canonical {:?}", my_map);
+    my_map.assign(-20, 80, 'V');
+    println!("Cleares interval {:?}", my_map);
 }
+/*
+Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: '_', 2147483647: '_'} }
+Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 2147483647: '_'} }
+Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 10: 'A', 50: '_', 2147483647: '_'} }
+Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 2: 'A', 5: '_', 10: 'A', 20: 'B', 30: 'A', 50: '_', 2147483647: '_'} }  
+Closest for 10: Some((10, 'A'))
+Closest for 25: Some((20, 'B'))
+Canonical Map { val_begin: '_', mymap: {-2147483648: '_', 0: 'A', 5: '_', 10: 'A', 20: 'B', 30: 'A', 50: '_', 2147483647: '_'} }
+Cleares interval Map { val_begin: '_', mymap: {-2147483648: '_', -20: 'V', 80: '_', 2147483647: '_'} }
+ */
