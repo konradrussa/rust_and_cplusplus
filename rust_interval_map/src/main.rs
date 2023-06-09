@@ -33,12 +33,7 @@ where
         {
             return;
         }
-        let what_ends: V = *self
-            .mymap
-            .range((Unbounded, Included(_key_end)))
-            .last()
-            .unwrap()
-            .1;
+        let what_ends: V = *self.get_closest(_key_end).unwrap().1;
         self.delete_range(_key_begin, _key_end);
         self.mymap.insert(_key_begin, _value);
         self.mymap.insert(_key_end, what_ends);
