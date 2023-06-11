@@ -4,7 +4,7 @@ use std::ops::Bound::{Included, Unbounded};
 trait Interval<'a, K, V> {
     fn init(&mut self, _key_begin: K, _key_end: K);
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V);
-    fn delete_keys(&mut self, _keys: &Vec<K>);
+    fn delete_keys(&mut self, _keys: &[K]);
     fn delete_range(&mut self, _key_begin: K, _key_end: K);
     fn make_canonical(&mut self);
     fn get_closest(&self, _key: K) -> Option<(&K, &V)>;
@@ -26,7 +26,7 @@ where
         self.mymap.insert(_key_end, self.val_begin);
     }
     fn assign(&mut self, _key_begin: K, _key_end: K, _value: V) {
-        if !(_key_begin < _key_end)
+        if _key_begin >= _key_end
             || _key_begin <= *self.mymap.first_key_value().unwrap().0
             || _key_end > *self.mymap.last_key_value().unwrap().0
             || _value == self.val_begin
@@ -56,9 +56,9 @@ where
         }
         self.delete_keys(&keys);
     }
-    fn delete_keys(&mut self, _keys: &Vec<K>) {
+    fn delete_keys(&mut self, _keys: &[K]) {
         for _key in _keys {
-            let _ = &self.mymap.remove(&_key);
+            let _ = &self.mymap.remove(_key);
         }
     }
     fn get_closest(&self, _key: K) -> Option<(&K, &V)> {
