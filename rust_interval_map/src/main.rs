@@ -18,8 +18,8 @@ struct Map<'a, K, V> {
 
 impl<'a, K, V> Interval<'a, K, V> for Map<'a, K, V>
 where
-    K: Copy + std::cmp::Eq + std::hash::Hash + std::cmp::Ord + std::fmt::Debug + 'a,
-    V: Copy + std::cmp::PartialEq + std::default::Default + std::fmt::Debug + 'a,
+    K: Copy + Eq + Ord + std::hash::Hash + std::fmt::Debug + 'a,
+    V: Copy + PartialEq + Default + std::fmt::Debug + 'a,
 {
     fn init(&mut self, _key_begin: K, _key_end: K) {
         self.mymap.insert(_key_begin, self.val_begin);
