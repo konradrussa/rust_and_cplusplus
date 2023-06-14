@@ -26,16 +26,18 @@ fn handle_client(mut stream: TcpStream) {
 fn main() -> std::io::Result<()> {
     let listener: TcpListener = TcpListener::bind("127.0.0.1:13")?;
 
-    listener.incoming().for_each(|stream| match stream {
-        Ok(stream) => {
-            thread::spawn(move || {
-                handle_client(stream);
-            });
-        }
-        Err(e) => {
-            println!("Error: {}", e);
-        }
-    });
+    listener
+        .incoming()
+        .for_each(|stream: Result<TcpStream, std::io::Error>| match stream {
+            Ok(stream) => {
+                thread::spawn(move || {
+                    handle_client(stream);
+                });
+            }
+            Err(e) => {
+                println!("Error: {}", e);
+            }
+        });
     drop(listener);
     Ok(())
 }
