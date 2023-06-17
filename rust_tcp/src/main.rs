@@ -1,7 +1,7 @@
 use std::str;
 use std::thread;
 use std::{
-    io::{BufWriter, Read, Write},
+    io::{BufWriter, Error, Read, Write},
     net::{Shutdown, TcpListener, TcpStream},
 };
 
@@ -31,7 +31,7 @@ fn main() -> std::io::Result<()> {
 
     listener
         .incoming()
-        .for_each(|stream: Result<TcpStream, std::io::Error>| match stream {
+        .for_each(|stream: Result<TcpStream, Error>| match stream {
             Ok(stream) => {
                 thread::spawn(move || {
                     handle_client(stream);
