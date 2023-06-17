@@ -1,3 +1,4 @@
+use std::str;
 use std::thread;
 use std::{
     io::{BufWriter, Read, Write},
@@ -9,11 +10,13 @@ fn handle_client(mut stream: TcpStream) {
     let mut buf_writer: BufWriter<Vec<u8>> = BufWriter::new(Vec::new());
     while match stream.read(&mut buf) {
         Ok(_size) => {
-            let _ = buf_writer.write_fmt(format_args!("NEW BUFFER DATA:"));
+            let _ = buf_writer.write_all((_size.to_string().to_owned()).as_bytes());
             stream.write_all(buf_writer.buffer()).unwrap();
             stream.write_all(&buf).unwrap();
             let _ = stream.flush();
             let _ = buf_writer.flush();
+            let _end: &str = str::from_utf8(&buf).unwrap();
+            println!("{}", _end);
             true
         }
         Err(_) => {
